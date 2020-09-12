@@ -14,7 +14,8 @@ class Register extends React.Component{
             password: "",
             passwordConfirmation: "",
             errors: "",
-            userRef: firebase.database().ref("users")
+            userRef: firebase.database().ref("users"),
+            loading: false
                   }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -80,7 +81,7 @@ class Register extends React.Component{
         });
           }}
     saveUser=(createdUser)=>{
-      debugger
+
       return this.state.userRef.child(createdUser.user.uid).set({
         name: createdUser.user.displayName,
         avatart: createdUser.user.photoURL
@@ -89,19 +90,20 @@ class Register extends React.Component{
 
     render(){
         let errordiv = ""
-        debugger
+
         if (this.state.errors.trim().length > 1) {
           errordiv = <Message negative>
             <Message.Header>An Error Has Ocurred</Message.Header>
             <p>{this.state.errors}</p>
         </Message>
         }
+
         return(
         <div>
              <Grid textAlign='center'  verticalAlign='middle' className="app">
                  <Grid.Column style={{maxWidth:450}}>
                     <Header as="h2" icon color="green" textAlign="center">
-                        <Icon icon="cog"name="Slackify" color="green" />
+                        <Icon name="cog"  color="green" />
                         Join Slackify!
                     </Header>
 
@@ -114,7 +116,7 @@ class Register extends React.Component{
                             <Form.Input fluid name="passwordConfirmation" icon="unlock" iconPosition="left" placeholder="password confirmation" onChange={this.handleChange} type="password"></Form.Input>
                             <Button   disabled={this.state.loading} className={this.state.loading ? "loading" : ""}content="Register Now!" color="green" fluid size="large"></Button>
                         </Segment>
-                        <Message>Already a user? Log In! <Link to="/login"></Link></Message>
+                        <Message><Link to="/login">Already a user? Log In!</Link></Message>
                     </Form>
                  </Grid.Column>
              </Grid>
