@@ -1,6 +1,8 @@
-import React from "react"
-import {Grid, Form, Button, Segment, Header, Message, Icon, GridColumn} from "semantic-ui-react"
-import{Link} from 'react-router-dom'
+import React from "react";
+import {Grid, Form, Button, Segment, Header, Message, Icon, GridColumn} from "semantic-ui-react";
+import{Link} from 'react-router-dom';
+import firebase from '../../firebase.js';
+
 class Register extends React.Component{
     constructor(props){
         super(props)
@@ -28,15 +30,30 @@ class Register extends React.Component{
             password: this.state.password,
             passwordConfirmation: this.state.passwordConfirmation,
             email: this.state.email,
-            error:[]
+            error:[],
+            loading: false
           }
-          debugger
+
           if (payload.username.trim().length < 1 || payload.password.trim().length < 1 || payload.email.trim().length<1){
             this.setState({errors: "One or more fields are missing"})
           }else if(payload.password.trim()!=payload.passwordConfirmation.trim()){
             this.setState({errors: "The passwords you entered do not match"})
           }else{
-              console.log("hello")
+            this.setState({ errors: "", loading: true })
+            firebase
+                .auth()
+                    .createUserWithEmailAndPassword(this.state.email,this.state.password)
+                        .then(createdUser=>{
+                            console.log(createdUser);
+                            this.setState({ loading: false });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            this.setState({
+                              errors: this.state.errors.concat(err),
+                              loading: false
+                            });
+                          })
           }
     }
 
@@ -64,7 +81,7 @@ class Register extends React.Component{
                             <Form.Input fluid name="email" icon="mail" iconPosition="left" placeholder="email" onChange={this.handleChange} type="text"></Form.Input>
                             <Form.Input fluid name="password" icon="lock" iconPosition="left" placeholder="password" onChange={this.handleChange} type="password"></Form.Input>
                             <Form.Input fluid name="passwordConfirmation" icon="unlock" iconPosition="left" placeholder="password confirmation" onChange={this.handleChange} type="password"></Form.Input>
-                            <Button content="Register Now!" color="green" fluid size="large"></Button>
+                            <Button   disabled={this.state.loading} className={this.state.loading ? "loading" : ""}content="Register Now!" color="green" fluid size="large"></Button>
                         </Segment>
                         <Message>Already a user? Log In! <Link to="/login"></Link></Message>
                     </Form>
