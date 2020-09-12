@@ -2,6 +2,8 @@ import React from "react";
 import {Grid, Form, Button, Segment, Header, Message, Icon, GridColumn} from "semantic-ui-react";
 import{Link} from 'react-router-dom';
 import firebase from '../../firebase.js';
+import md5 from "md5";
+
 
 class Register extends React.Component{
     constructor(props){
@@ -11,10 +13,12 @@ class Register extends React.Component{
             email: "",
             password: "",
             passwordConfirmation: "",
-            errors: ""
-        }
+            errors: "",
+            userRef: firebase.database().ref("users")
+                  }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.saveUser = this.saveUser.bind(this)
     }
 
     handleChange(event){
@@ -30,7 +34,7 @@ class Register extends React.Component{
             password: this.state.password,
             passwordConfirmation: this.state.passwordConfirmation,
             email: this.state.email,
-            error:[],
+            error:"",
             loading: false
           }
 
@@ -39,26 +43,53 @@ class Register extends React.Component{
           }else if(payload.password.trim()!=payload.passwordConfirmation.trim()){
             this.setState({errors: "The passwords you entered do not match"})
           }else{
-            this.setState({ errors: "", loading: true })
-            firebase
-                .auth()
-                    .createUserWithEmailAndPassword(this.state.email,this.state.password)
-                        .then(createdUser=>{
-                            console.log(createdUser);
-                            this.setState({ loading: false });
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            this.setState({
-                              errors: this.state.errors.concat(err),
-                              loading: false
-                            });
-                          })
-          }
+            this.setState({ errors: "", loading: true });
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(createdUser => {
+          console.log(createdUser);
+          createdUser.user
+            .updateProfile({
+              displayName: this.state.username,
+              photoURL: `http://gravatar.com/avatar/${md5(
+                createdUser.user.email
+              )}?d=identicon`
+            })
+            .then(() => {
+
+              this.saveUser(createdUser).then(() => {
+                console.log("user saved");
+                this.setState({loading:false})
+              });
+            })
+            .catch(err => {
+              console.error(err);
+              this.setState({
+                errors: err,
+                loading: false
+              });
+            });
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            errors: err,
+            loading: false
+          });
+        });
+          }}
+    saveUser=(createdUser)=>{
+      debugger
+      return this.state.userRef.child(createdUser.user.uid).set({
+        name: createdUser.user.displayName,
+        avatart: createdUser.user.photoURL
+      });
     }
 
     render(){
         let errordiv = ""
+        debugger
         if (this.state.errors.trim().length > 1) {
           errordiv = <Message negative>
             <Message.Header>An Error Has Ocurred</Message.Header>
