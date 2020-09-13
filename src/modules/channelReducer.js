@@ -1,6 +1,7 @@
 
 const initialChannelState = {
-    currentChannel: null
+    currentChannel: null,
+    isPrivateChannel: false
   };
   const channel_reducer = (state=initialChannelState, action)=>{
       switch(action.type){
@@ -9,6 +10,11 @@ const initialChannelState = {
               ...state,
               currentChannel: action.channel
           }
+          case SET_PRIVATE_CHANEL:
+              return{
+                  ...state,
+                  isPrivateChannel: action.isPrivateChannel
+              }
           default:
               return state
       }
@@ -24,6 +30,14 @@ const initialChannelState = {
       }
   }
 
+  const SET_PRIVATE_CHANEL = 'SET_PRIVATE_CHANNEL'
+  const setPrivateChannel = isPrivateChannel=>{
+    return{
+        type: SET_PRIVATE_CHANEL,
+        isPrivateChannel
+    }
+  }
+
 export{
-    channel_reducer,setCurrentChannel
+    channel_reducer,setCurrentChannel, setPrivateChannel
 }

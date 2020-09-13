@@ -12,7 +12,10 @@ class Messages extends React.Component {
         user:this.props.currentUser,
         messages:[],
         messagesLoading:false,
-        numUniqueUsers:''
+        numUniqueUsers:'',
+        searchTerm:'',
+        searchLoading:false,
+        searchResults:[]
 
     }
 
@@ -67,16 +70,35 @@ class Messages extends React.Component {
 
   displayChannelNames= (channel)=> channel ? `${channel.name}`:''
 
+
+  handleSearchMessages=()=>{
+    const channelMessages = [...this.state.messages]
+    const regex = new RegExp(this.state.searchTerm,'gi')
+    const searchResults= channelMessages.reduce((acc, message)=>{
+      if(message.content && message.content.match(regex) || message.user.name.match(regex)){
+        acc.push(message)
+      }
+      return acc
+    },[])
+    this.setState({searchResults})
+  }
+
+  handleSearchChange=(event)=>{
+    this.setState({
+      searchTerm: event.target.value,
+      searchLoading:true
+    },()=>this.handleSearchMessages())
+  }
   render() {
 
 
     return (
       <React.Fragment>
-        <MessagesHeader channelName={this.displayChannelNames(this.state.channel)}  numUniqueUsers={this.state.numUniqueUsers}  />
+        <MessagesHeader channelName={this.displayChannelNames(this.state.channel)}  numUniqueUsers={this.state.numUniqueUsers} handleSearchChange={this.handleSearchChange} />
 
         <Segment>
           <Comment.Group className="messages">
-          {this.displayMessages(this.state.messages)}
+          {this.state.searchTerm ? this.displayMessages(this.state.searchResults): this.displayMessages(this.state.messages)}
           </Comment.Group>
         </Segment>
 

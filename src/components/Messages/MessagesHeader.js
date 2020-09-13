@@ -14,7 +14,7 @@ class MessagesHeader extends React.Component{
                     <Header.Subheader>{this.props.numUniqueUsers}</Header.Subheader>
                 </Header>
                 <Header floated="right">
-                    <Input size="mini" icon="search" name="searchTerm" placeholder="Find Meassages"/>
+                    <Input onChange={this.props.handleSearchChange} size="mini" icon="search" name="searchTerm" placeholder="Find Meassages"/>
                 </Header>
             </Segment>
         )
