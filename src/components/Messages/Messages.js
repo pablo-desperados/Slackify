@@ -11,7 +11,8 @@ class Messages extends React.Component {
         channel: this.props.currentChannel,
         user:this.props.currentUser,
         messages:[],
-        messagesLoading:false
+        messagesLoading:false,
+        numUniqueUsers:''
 
     }
 
@@ -33,9 +34,25 @@ class Messages extends React.Component {
       loadedMessages.push(snap.val())
       console.log(loadedMessages)
       this.setState({messages: loadedMessages, messagesLoading:false})
+
+      this.countUniqueUsers(loadedMessages)
     })
   }
 
+  countUniqueUsers=(messages)=>{
+    const uniqueUsers = messages.reduce((acc, message)=>{
+      if(!acc.includes(message.user.name)){
+        acc.push(message.user.name)
+      }
+
+      return acc
+    },[]
+    
+    )
+
+    const numUniqueUsers =`${uniqueUsers.length} users`
+    this.setState({numUniqueUsers})
+  }
   displayMessages=messages=>(
     messages.length > 0 && messages.map(message=>(
     <Message
@@ -47,12 +64,15 @@ class Messages extends React.Component {
     ))
 
     )
+
+  displayChannelNames= (channel)=> channel ? `${channel.name}`:''
+
   render() {
 
 
     return (
       <React.Fragment>
-        <MessagesHeader />
+        <MessagesHeader channelName={this.displayChannelNames(this.state.channel)}  numUniqueUsers={this.state.numUniqueUsers}  />
 
         <Segment>
           <Comment.Group className="messages">

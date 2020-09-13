@@ -8,10 +8,10 @@ class MessagesHeader extends React.Component{
 
                 <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
                     <span>
-                       Channel
+                        #{this.props.channelName}
                     <Icon name={"star outline"} color="black"></Icon> 
                     </span>
-                    <Header.Subheader>2 users</Header.Subheader>
+                    <Header.Subheader>{this.props.numUniqueUsers}</Header.Subheader>
                 </Header>
                 <Header floated="right">
                     <Input size="mini" icon="search" name="searchTerm" placeholder="Find Meassages"/>
