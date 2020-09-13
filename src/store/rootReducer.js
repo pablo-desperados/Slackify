@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux'
-import {userReducer, setUser} from '../modules/setUserreducer'
+import {userReducer, setUser, closeUser} from '../modules/setUserreducer'
 
 const rootReducer = combineReducers({
-    userReducer,
-    setUser
+    userReducer
 
 })
 

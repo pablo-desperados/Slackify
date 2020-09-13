@@ -12,6 +12,11 @@ const userReducer =(state=initialState,action)=>{
                 currentUser: action.user,
                 isLoading:false
             }
+        case CLOSE_USER:
+            return{
+                ...initialState,
+                isLoading:false
+            }
         default:
             return state
     }
@@ -19,12 +24,24 @@ const userReducer =(state=initialState,action)=>{
 
 const SET_USER = 'SET_USER'
 
+
 const setUser=user=>{
     return{
         type: SET_USER,
         user
     }
 }
+
+
+const CLOSE_USER='CLOSE_USER'
+
+const closeUser = ()=>{
+    return{
+        type: CLOSE_USER,
+
+    }
+}
+
 export{
-    userReducer,setUser
+    userReducer,setUser, closeUser
 }
