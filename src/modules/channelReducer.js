@@ -1,7 +1,8 @@
 
 const initialChannelState = {
     currentChannel: null,
-    isPrivateChannel: false
+    isPrivateChannel: false,
+    userPosts: null
   };
   
   const channel_reducer = (state=initialChannelState, action)=>{
@@ -16,6 +17,11 @@ const initialChannelState = {
                   ...state,
                   isPrivateChannel: action.isPrivateChannel
               }
+            case SET_USER_POST:
+                return{
+                    ...state,
+                    userPosts: action.userPosts
+            }
           default:
               return state
       }
@@ -39,6 +45,13 @@ const initialChannelState = {
     }
   }
 
+  const SET_USER_POST = "SET_USER_POST"
+  const setUserPosts = userPosts=>{
+  return{
+      type: SET_USER_POST,
+      userPosts
+  }}
+
 export{
-    channel_reducer,setCurrentChannel, setPrivateChannel
+    channel_reducer,setCurrentChannel, setPrivateChannel, setUserPosts
 }

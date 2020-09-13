@@ -4,6 +4,8 @@ import firebase from '../../firebase'
 import Message from './Message'
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
+import {connect} from 'react-redux'
+import {setUserPosts} from '../../modules/channelReducer'
 
 class Messages extends React.Component {
     state={
@@ -43,6 +45,7 @@ class Messages extends React.Component {
       this.setState({messages: loadedMessages, messagesLoading:false})
 
       this.countUniqueUsers(loadedMessages)
+      this.countUserPosts(loadedMessages)
     })
   }
 
@@ -60,6 +63,23 @@ class Messages extends React.Component {
     const numUniqueUsers =`${uniqueUsers.length} users`
     this.setState({numUniqueUsers})
   }
+
+
+  countUserPosts =(messages)=>{
+    let userPost = messages.reduce((acc,message)=>{
+      if(message.user.name in acc){
+        acc[message.user.name].count+=1
+      }else{
+        acc[message.user.name]={
+          avatar: message.user.avatar,
+          count:1
+        }
+      }
+      return acc
+    },{})
+    this.props.setUserPosts(userPost)
+  }
+
   displayMessages=messages=>(
     
     messages.length > 0 && messages.map(message=>(
@@ -133,4 +153,4 @@ class Messages extends React.Component {
   }
 }
 
-export default Messages;
+export default connect(null,{setUserPosts})(Messages);
