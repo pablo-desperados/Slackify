@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Header, Icon, Dropdown } from "semantic-ui-react";
+import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
 import firebase from '../../firebase.js'
 import {connect} from 'react-redux'
 class UserPanel extends React.Component {
@@ -50,15 +50,17 @@ class UserPanel extends React.Component {
               <Icon name="comment alternate outline icon"/>
               <Header.Content>Slackify</Header.Content>
             </Header>
-          </Grid.Row>
-
-
-          <Header style={{ padding: "0.25em" }} as="h4" inverted>
+            <Header style={{ padding: "0.25em" }} as="h4" inverted>
             <Dropdown
-              trigger={<span>{this.state.user.displayName}</span>}
+              trigger={<span>
+                <Image spaced='right' avatar src={this.state.user.photoURL}/>
+                {
+                this.state.user.displayName
+                }</span>}
               options={this.Options()}
             />
           </Header>
+          </Grid.Row>
         </Grid.Column>
       </Grid>
     );

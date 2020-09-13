@@ -22,6 +22,8 @@ const userReducer =(state=initialState,action)=>{
     }
 }
 
+
+
 const SET_USER = 'SET_USER'
 
 
@@ -41,6 +43,7 @@ const closeUser = ()=>{
 
     }
 }
+
 
 export{
     userReducer,setUser, closeUser

@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import {userReducer, setUser, closeUser} from '../modules/setUserreducer'
+import {channel_reducer,setCurrentChannel} from '../modules/channelReducer'
 
 const rootReducer = combineReducers({
-    userReducer
+    userReducer,
+    channel_reducer
 
 })
 
