@@ -16,7 +16,7 @@ const initialChannelState = {
 
   const SET_CURRENT_CHANNEL='SET_CURRENT_CHANNEL'
 
-  const setCurrentChannel = (channel)=>{
+  const setCurrentChannel = channel=>{
       return{
           type: SET_CURRENT_CHANNEL,
           channel

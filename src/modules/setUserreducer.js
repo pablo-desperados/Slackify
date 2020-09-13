@@ -39,7 +39,7 @@ const CLOSE_USER='CLOSE_USER'
 
 const closeUser = ()=>{
     return{
-        type: CLOSE_USER,
+        type: CLOSE_USER
 
     }
 }
