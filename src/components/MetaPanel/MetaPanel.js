@@ -6,7 +6,7 @@ class MetaPanel extends React.Component{
         channel: this.props.currentChannel,
         privateChannel: this.props.isPrivateChannel,
 
-        activeIndex:0
+        activeIndex: 0
     }
 
     setActiveIndex=(event, titleprops)=>{
