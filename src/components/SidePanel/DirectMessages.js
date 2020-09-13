@@ -7,6 +7,7 @@ import {setCurrentChannel, setPrivateChannel} from '../../modules/channelReducer
 
 class DirectMessages extends React.Component{
     state={
+        activeChannel: '',
         users:[],
         user: this.props.currentUser,
         usersRef: firebase.database().ref('users'),
@@ -73,7 +74,8 @@ class DirectMessages extends React.Component{
 
     
     changeChannel= user =>{
-        const channelId = this.getchannelId(this.state.user.uid)
+        debugger
+        const channelId = this.getChannelId(user.uid)
     
         const channelData = {
             id: channelId,
@@ -81,39 +83,48 @@ class DirectMessages extends React.Component{
         }
         this.props.setCurrentChannel(channelData)
         this.props.setPrivateChannel(true)
+        this.setActiveChannel(user.uid)
     }
     
-
-    getchannelId=userId=>{
-        const currentUserid = this.state.user.uid
-        return userId < currentUserid ? `${userId}/${currentUserid}` : `${currentUserid}/${userId}`
+    setActiveChannel =(userUId)=>{
+        this.setState({activeChannel: userUId})
     }
+
+      getChannelId = userId => {
+    const currentUserId = this.state.user.uid;
+    return userId < currentUserId
+      ? `${userId}/${currentUserId}`
+      : `${currentUserId}/${userId}`;
+  }
 
     render(){
        
+        const { users , activeChannel} = this.state;
 
-        return(
-            <Menu.Menu className="menu">
-
+        return (
+          <Menu.Menu className="menu">
             <Menu.Item>
-                <span>
-                    <Icon name="mail"/> DM's
-                </span>{' '}
-                ({this.state.users.length})
+              <span>
+                <Icon name="mail" /> DIRECT MESSAGES
+              </span>{" "}
+              ({users.length})
             </Menu.Item>
-            {this.state.users.map(user=>
-            
-            (
-            <Menu.Item
-            key={user.uid}
-            onClick={()=>this.changeChannel(user)}
-            style={{opacity: 0.7, fontStyle:'italic'}}>
-                <Icon name="circle" color={this.isUserOnline(user) ? 'green':'red'}/>
-                @{user.name}
-            </Menu.Item>
+            {users.map(user => (
+              <Menu.Item
+              active={user.uid === activeChannel}
+                key={user.uid}
+                onClick={() => this.changeChannel(user)}
+                style={{ opacity: 0.7, fontStyle: "italic" }}
+              >
+                <Icon
+                  name="circle"
+                  color={this.isUserOnline(user) ? "green" : "red"}
+                />
+                @ {user.name}
+              </Menu.Item>
             ))}
-            </Menu.Menu>
-        )
+          </Menu.Menu>
+        );
     }
 }
 export default connect(null,{setCurrentChannel, setPrivateChannel})(DirectMessages)

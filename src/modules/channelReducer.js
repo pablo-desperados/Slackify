@@ -3,6 +3,7 @@ const initialChannelState = {
     currentChannel: null,
     isPrivateChannel: false
   };
+  
   const channel_reducer = (state=initialChannelState, action)=>{
       switch(action.type){
           case SET_CURRENT_CHANNEL:

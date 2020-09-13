@@ -7,7 +7,9 @@ import MessagesForm from "./MessagesForm";
 
 class Messages extends React.Component {
     state={
+        privateChannel: this.props.isPrivateChannel,
         messagesRef: firebase.database().ref("messages"),
+        privateMessagesRef: firebase.database().ref("privatemessages"),
         channel: this.props.currentChannel,
         user:this.props.currentUser,
         messages:[],
@@ -18,7 +20,7 @@ class Messages extends React.Component {
         searchResults:[]
 
     }
-
+   
 
     componentDidMount(){
       const{channel,user}=this.state
@@ -32,8 +34,10 @@ class Messages extends React.Component {
   }
 
   addMessageListener=channelId=>{
+    
     let loadedMessages=[]
-    this.state.messagesRef.child(channelId).on("child_added", snap=>{
+    const ref = this.getMessagesRef()
+    ref.child(channelId).on("child_added", snap=>{
       loadedMessages.push(snap.val())
       console.log(loadedMessages)
       this.setState({messages: loadedMessages, messagesLoading:false})
@@ -57,6 +61,7 @@ class Messages extends React.Component {
     this.setState({numUniqueUsers})
   }
   displayMessages=messages=>(
+    
     messages.length > 0 && messages.map(message=>(
     <Message
     key={message.timestamp}
@@ -68,7 +73,21 @@ class Messages extends React.Component {
 
     )
 
-  displayChannelNames= (channel)=> channel ? `${channel.name}`:''
+    componentDidUpdate(prevProps, prevState) {
+      Object.entries(this.props).forEach(([key, val]) =>
+        prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+      );
+      if (this.state) {
+        Object.entries(this.state).forEach(([key, val]) =>
+          prevState[key] !== val && console.log(`State '${key}' changed`)
+        );
+      }
+    }
+
+  displayChannelNames= (channel)=> {
+
+    return channel ?`${this.state.isPrivateChannel ? '@':'#'}${channel.name}`:''
+  }
 
 
   handleSearchMessages=()=>{
@@ -83,6 +102,11 @@ class Messages extends React.Component {
     this.setState({searchResults})
   }
 
+  getMessagesRef = ()=>{
+    const {messagesRef, privateMessagesRef, privateChannel}=this.state
+    return privateChannel ? privateMessagesRef: messagesRef
+  }
+
   handleSearchChange=(event)=>{
     this.setState({
       searchTerm: event.target.value,
@@ -91,10 +115,10 @@ class Messages extends React.Component {
   }
   render() {
 
-
+    
     return (
       <React.Fragment>
-        <MessagesHeader channelName={this.displayChannelNames(this.state.channel)}  numUniqueUsers={this.state.numUniqueUsers} handleSearchChange={this.handleSearchChange} />
+        <MessagesHeader channelName={this.displayChannelNames(this.state.channel)}  numUniqueUsers={this.state.numUniqueUsers} handleSearchChange={this.handleSearchChange} privateChannel={this.state.privateChannel} />
 
         <Segment>
           <Comment.Group className="messages">
@@ -102,7 +126,8 @@ class Messages extends React.Component {
           </Comment.Group>
         </Segment>
 
-        <MessagesForm messagesRef={this.state.messagesRef} currentChannel={this.state.channel} currentUser={this.state.user}/>
+        <MessagesForm messagesRef={this.state.messagesRef} currentChannel={this.state.channel} currentUser={this.state.user} isPrivateChannel={this.state.privateChannel} 
+        getMessagesRef={this.getMessagesRef}/>
       </React.Fragment>
     );
   }

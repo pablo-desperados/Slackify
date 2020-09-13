@@ -25,6 +25,7 @@ class MessagesForm extends React.Component{
     closeModal=()=> this.setState({modal:false})
 
     handleChange=event=>{
+
         this.setState({[event.target.name]:event.target.value})
     }
 
@@ -46,34 +47,46 @@ class MessagesForm extends React.Component{
         }
         return message
     }
-
-    sendMessage=()=>{
-
-        const {message, channel}=this.state
-        const messageRef= this.props.messagesRef
-
-        if (message){
-            this.setState({loading:true})
-            messageRef
+    sendMessage = () => {
+        const { getMessagesRef } = this.props;
+        const { message, channel } = this.state;
+    
+        if (message) {
+          this.setState({ loading: true });
+          getMessagesRef()
             .child(channel.id)
             .push()
             .set(this.createMessage())
-            .then(()=>{
-                this.setState({loading:false, message:'',errors:[]})
+            .then(() => {
+              this.setState({ loading: false, message: "", errors: [] });
             })
-            .catch(err=>{
-                console.log(err)
-                this.setState({loading:false, errors: this.state.errors.concat(err)})
-            })
+            .catch(err => {
+              console.error(err);
+              this.setState({
+                loading: false,
+                errors: this.state.errors.concat(err)
+              });
+            });
+        } else {
+          this.setState({
+            errors: this.state.errors.concat({ message: "Add a message" })
+          });
+        }
+      }; 
+
+    getPath=()=>{
+        if(this.props.isPrivateChannel){
+            return `chat/private-${this.state.channel.id}`
         }else{
-            this.setState({errors: this.state.errors.concat({message: 'Add a message'}) })
+            return 'chart/public'
         }
     }
+    
 
     uploadFile=(file,metadata)=>{
         const pathToUpload = this.state.channel.id
-        const ref= this.props.messagesRef
-        const filePath = `chat/public/${uuidv4()}.jpg`
+        const ref= this.props.getMessagesRef()
+        const filePath = `${this.getPath()}/${uuidv4()}.jpg`
 
         this.setState({uploadState: 'uploading', uploadTask: this.state.storageRef.child(filePath).put(file,metadata)},
         ()=>{
