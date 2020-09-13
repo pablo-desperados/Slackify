@@ -48,7 +48,7 @@ const mapStateFromProps = state =>({
     isLoading: state.userReducer.isLoading
 })
 
-const RootAuth = withRouter(connect(mapStateFromProps,{setUser, closeUser})(Root))
+const RootAuth = withRouter(connect(mapStateFromProps,{setUser, closeUser })(Root))
 
 ReactDOM.render(
     <Provider store={store}>
