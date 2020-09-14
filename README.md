@@ -25,3 +25,15 @@ localhost:3000
 With Slackify, you can create channels to share messages.
 
 ![demonstration1](./gifs/add_channels.gif)
+
+
+Chat with other users
+![demonstration2](./gifs/chat.gif)
+
+
+Add, upload, and modify media...
+![demonstration3](./gifs/save_avatar.gif)
+
+
+All on a real-time app!
+![demonstration4](./gifs/typing.gif)
