@@ -8,11 +8,7 @@ class ColorPanel extends React.Component{
 
     render(){
         return(
-            <Sidebar as={Menu} icon="labeled" inverted vertical visible width="very thin" color="1C1C1D">
-                <Divider/>
-                <Button icon="add" color="blue" />
-
-            </Sidebar>
+            <div></div>
         )
     }
 }
