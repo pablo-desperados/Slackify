@@ -28,6 +28,7 @@ class Channels extends React.Component {
     this.removeListeners();
   }
 
+
   addListeners = () => {
     let loadedChannels = [];
     this.state.channelsRef.on("child_added", snap => {
@@ -71,6 +72,9 @@ class Channels extends React.Component {
   }
   removeListeners = () => {
     this.state.channelsRef.off();
+    this.state.forEach(channel=>{
+      this.state.messagesRef.child(channel.id).off()
+    })
   };
 
   setFirstChannel = () => {
