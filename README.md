@@ -2,7 +2,6 @@
 
 Totally not an attempt to make a clone of slack using React, Redux, and Firebase. Feel free to fork this project and add features.
 
-Visit: https://slackify-26e73.web.app/
 
 # Getting started
 
